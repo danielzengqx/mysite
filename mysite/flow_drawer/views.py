@@ -22,11 +22,11 @@ def index(request):
         direction_line = ''
         arrow_line = list()
         tmp_list_signal = list()
-        list_signal = list()
-        final_arrow_line = ''
+#        list_signal = list()
+        final_arrow_line = list()
         dict_line = dict()
         dict_arrow = dict()
-        direction = ''
+        direction = list()
         if 'signal_flow_code' in request.POST:
                 tmp = str(request.POST['signal_flow_code']).split('\r\n')
                 network_element = tmp.pop(0).split('@')[1]
@@ -47,55 +47,64 @@ def index(request):
         for context in message_and_signal:
                 if '->' in context:
                         signal.append(context)
-                        tmp_list_signal = signal[0].split('->')
+
                 else:
                         message.append(context)
 
-
-        if tmp_list_signal:
-                if list_network_element.index(tmp_list_signal[0]) < list_network_element.index(tmp_list_signal[1]):
-                        direction = 'forward'
-                elif list_network_element.index(tmp_list_signal[0]) > list_network_element.index(tmp_list_signal[1]):
-                        direction = 'backward'
-                else:
-                        direction = 'wrong'
+        for count in range(len(signal)):
+                tmp_list_signal.append(signal[count].split('->'))
+        
+        for signal_count in range(len(tmp_list_signal)):
+                if tmp_list_signal[0]:
+                        if list_network_element.index(tmp_list_signal[signal_count][0]) < list_network_element.index(tmp_list_signal[signal_count][1]):
+                                direction.append('forward')
+                        elif list_network_element.index(tmp_list_signal[signal_count][0]) > list_network_element.index(tmp_list_signal[signal_count][1]):
+                                direction.append('backward')
+                        else:
+                                direction.append('wrong')
                         
-        final_arrow_line = final_line
-        j = 0
-        dict_arrow = dict_line.copy()
+#        final_arrow_line.append(final_line)
+#        j = 0
 
-        if direction == 'forward':
-                for item in tmp_list_signal:
-                        for ne in dict_arrow.keys():
-                                if item == ne :
-                                        if  j == 0:
-                                                list_signal.append(len(ne)/2 * ' ' + '|' + (len(ne)-len(ne)/2-1) * '-' );
-                                        elif j == 1:
-                                                list_signal.append((len(ne)/2-1) * '-' + '>' + '|' + (len(ne)-len(ne)/2-1) * ' ' );        
-                        
-                                        dict_arrow[ne] = list_signal[j]
-                                        j = j +1
-                d = list_signal
-                final_arrow_line = network_element
-                for element in dict_arrow.keys():
-                        final_arrow_line = final_arrow_line.replace(element,dict_arrow[element],1)
-                        final_arrow_line = re.sub("\-[\-\| ]*\>", lambda x:x.group(0).replace('|',' ').replace(' ','-'), final_arrow_line)
+
+
+
+        for signal_count in range(len(tmp_list_signal)): 
+                j = 0
+                list_signal = list()
+                dict_arrow = dict_line.copy()
+                if direction[signal_count]== 'forward':
+                        for item in tmp_list_signal[signal_count]:
+                                for ne in dict_arrow.keys():
+                                        if item == ne :
+                                                if  j == 0:
+                                                        list_signal.append(len(ne)/2 * ' ' + '|' + (len(ne)-len(ne)/2-1) * '-' )
+                                                elif j == 1:
+                                                        list_signal.append((len(ne)/2-1) * '-' + '>' + '|' + (len(ne)-len(ne)/2-1) * ' ' )
+                                                dict_arrow[ne] = list_signal[j]
+                                                j = j +1
+
+                        d = list_signal
+                        final_arrow_line.append(network_element)
+                        for element in dict_arrow.keys():
+                                final_arrow_line[signal_count] = final_arrow_line[signal_count].replace(element,dict_arrow[element],1)
+                                final_arrow_line[signal_count] = re.sub("\-[\-\| ]*\>", lambda x:x.group(0).replace('|',' ').replace(' ','-'), final_arrow_line[signal_count])
                                                 
-        elif direction == 'backward':
-                for item in tmp_list_signal:
-                        for ne in dict_arrow.keys():
-                                if item == ne :
-                                        if  j == 1:
-                                                list_signal.append(len(ne)/2 * ' ' + '|' + '<' + (len(ne)-len(ne)/2-2) * '-' );
-                                        elif j == 0:
-                                                list_signal.append((len(ne)/2) * '-' + '|'  + (len(ne)-len(ne)/2-1) * '' );        
-                                        dict_arrow[ne] = list_signal[j]
-                                        j = j +1
-                d = list_signal
-                final_arrow_line = network_element
-                for element in dict_arrow.keys():
-                        final_arrow_line = final_arrow_line.replace(element,dict_arrow[element],1)
-                        final_arrow_line = re.sub("\<[\-\| ]*\-", lambda x:x.group(0).replace('|',' ').replace(' ','-'), final_arrow_line)
+                elif direction[signal_count] == 'backward':
+                        for item in tmp_list_signal[signal_count]:
+                                for ne in dict_arrow.keys():
+                                        if item == ne :
+                                                if  j == 1:
+                                                        list_signal.append(len(ne)/2 * ' ' + '|' + '<' + (len(ne)-len(ne)/2-2) * '-' )
+                                                elif j == 0:
+                                                        list_signal.append((len(ne)/2) * '-' + '|'  + (len(ne)-len(ne)/2-1) * ' ' )
+                                                dict_arrow[ne] = list_signal[j]
+                                                j = j +1
+                        d = list_signal
+                        final_arrow_line.append(network_element)
+                        for element in dict_arrow.keys():
+                                final_arrow_line[signal_count] = final_arrow_line[signal_count].replace(element,dict_arrow[element],1)
+                                final_arrow_line[signal_count] = re.sub("\<[\-\| ]*\-", lambda x:x.group(0).replace('|',' ').replace(' ','-'), final_arrow_line[signal_count])
         
         
         

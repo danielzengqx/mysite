@@ -49,8 +49,8 @@
 <p>
      {{ network_element }}    
      {% for line in times %}
-     {{ final_line }}{% endfor %}
-     {{ final_arrow_line }}
+     {{ final_line }}{% endfor %}{% for signal in final_arrow_line %}
+     {{ signal }}{% endfor %}
 
 Arrow_line:
      {{ a }}
@@ -60,35 +60,34 @@ Arrow_line:
 
 </p>
 
-
 </pre>
-</br>
-</br>
-<p>
-  Signal:</br>
-  {% for i in signal %}
-  {{ i }}
-  {% endfor %}
-</p>
+ </br>
+ </br>
+ <p>
+   Signal:</br>
+   {% for i in signal %}
+   {{ i }}
+   {% endfor %}
+ </p>
 
 
-<p>Message:</br>
-{{ message }}
+ <p>Message:</br>
+ {{ message }}
 
 
-</p>
-</br>
-</br>
-<h1> sgnal_flow_code:
-</br>
-{% for item in signal_flow %}
-{{ item }}
-{% endfor %}
-<form action="{% url 'flow_drawer:index' %}" method="post">
+ </p>
+ </br>
+ </br>
+ <h1> sgnal_flow_code:
+ </br>
+ {% for item in signal_flow %}
+ {{ item }}
+ {% endfor %}
+ <form action="{% url 'flow_drawer:index' %}" method="post">
 
-{% csrf_token %}
-<textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px"></textarea>
-<input type="submit" value="SF Code -> SF" onclick="saveContent();"/>
-</form>
+ {% csrf_token %}
+ <textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px"></textarea>
+ <input type="submit" value="SF Code -> SF" onclick="saveContent();"/>
+ </form>
 
-</body>
+ </body>
