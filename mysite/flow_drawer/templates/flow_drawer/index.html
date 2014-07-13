@@ -8,6 +8,8 @@
 
    }
   </style>
+
+
   <script type="text/javascript" src="{{ STATIC_URL }}/cookie.js"></script>
   <script type="text/javascript">
     function saveContent(){
@@ -37,27 +39,78 @@
         document.getElementById("txt1").value = content;
 }
 
+    function resetContent(){
+    document.getElementById("txt1").value = "@AAAA                     BBBBB                                  CCC                        DDDDDD \n" +
+    "\n" +
+    "AAAA->CCC\n" +
+    "aa \n" +
+    "\n" +
+    "DDDDDD->BBBBB\n" +
+    "bb \n" +
+    "\n" +
+    "CCC->DDDDDD\n" +
+    "cc \n" +
+    "\n" +    
+    "BBBBB->AAAA\n" +
+    "dd \n";
+
+    content = document.getElementById("txt1").value;
+    //    alert("init content:"+ content);
+    if (navigator.cookieEnabled){
+    content = content.replace(/\r\n|\r|\n/g,'magic',1);
+    //            alert("content:\r" + content);
+    writeCookie("SFcode_content", content, 5 * 365);
+    }
+  
+}
+  window.onload=resetContent;    
   </script>
+
   
 </head>
-<body onload = "recoverContent()";>
+<!--<body onload = "recoverContent()";>-->
+<body>
 
 
 
 <pre>
 </br>
 <p>
-     {{ network_element }}    
-     {% for line in times %}
-     {{ final_line }}{% endfor %}{% for signal in final_arrow_line %}
-     {{ signal }}{% endfor %}
 
-Arrow_line:
-     {{ a }}
-     {{ b }}
-     {{ c }}
-     {{ d }}
+    {{ network_element }}    
+    {% for item in list_all_context %}
+    {{ item }}{% endfor %}
 
+
+</br>
+    {{ network_element }}    
+    {% for item in list_all_context_value %}
+    {{ item }}{% endfor %}
+
+    
+    
+
+
+Dict_Context:
+    {{ a }}
+    {{ b }}
+    {{ c }}
+    {{ d }}
+    {{ message_count }}
+    {{ arrow_count }}
+    {% for item in dict_all_context %} 
+    {{ item }}
+    {% endfor %}
+
+
+All_Context:
+    {% for item in list_all_context %}
+    {{ item }}{% endfor %}
+
+
+
+Keys:
+    {{ dict_all_context_keys }}
 </p>
 
 </pre>
@@ -66,7 +119,7 @@ Arrow_line:
  <p>
    Signal:</br>
    {% for i in signal %}
-   {{ i }}
+   {{ i }}</br></br>
    {% endfor %}
  </p>
 
@@ -78,15 +131,16 @@ Arrow_line:
  </p>
  </br>
  </br>
- <h1> sgnal_flow_code:
+ <h1> signal_flow_code:
  </br>
  {% for item in signal_flow %}
  {{ item }}
  {% endfor %}
- <form action="{% url 'flow_drawer:index' %}" method="post">
+ <form action="{% url 'flow_drawer:index' %}" method="post" onsubmit="recoverContent()";>
 
  {% csrf_token %}
- <textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px"></textarea>
+ <textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px">
+</textarea>
  <input type="submit" value="SF Code -> SF" onclick="saveContent();"/>
  </form>
 
