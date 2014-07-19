@@ -46,13 +46,24 @@ def index(request):
         for i in range(len(dict_line.keys())):
                 final_line = final_line.replace(dict_line.keys()[i],dict_line.values()[i],1)
                 
-
-        for context in message_and_signal:
-                if '->' in context:
-                        signal.append(context)
+        #Get the messages and signal from the context
+        last_one_is_arrow = 1
+        no_blank_line = 1
+        for context_num in range(len(message_and_signal)):
+                if '->' in message_and_signal[context_num]:
+                        signal.append(message_and_signal[context_num])
                 else:
-                        message.append(context)
-                        
+                        if message_and_signal[context_num] :
+                                try :
+                                        if '->' in message_and_signal[context_num + 1] :
+                                                message.append(message_and_signal[context_num])
+                                                message.append('no_blank_line')
+                                        else :
+                                                message.append(message_and_signal[context_num])
+                                except IndexError :
+                                        message.append(message_and_signal[context_num])
+                        else :
+                                message.append(message_and_signal[context_num])
         try :
                 for item in range(len(message)) :
                         if not message[0] :
@@ -62,7 +73,8 @@ def index(request):
         except IndexError :
                 message = []
         
-                        
+        #End of Get the message and signal from context
+
         for count in range(len(signal)):
                 tmp_list_signal.append(signal[count].strip().split('->'))
         
@@ -117,33 +129,40 @@ def index(request):
 
         # Draw arrow line end
         
-
+        #Bind the messages to its signal
         message_count = 0
         dict_all_context = OrderedDict()
         tmp_arrow_related_message = []
         arrow_count = 0
         for arrow_count in range(len(final_arrow_line)):
                 if final_arrow_line[arrow_count]:
-                        try :
+                        try :                
                                 while message[message_count] :
-                                        tmp_arrow_related_message.append(message[message_count])
-                                        message_count = message_count + 1
+                                        if message[message_count] == 'no_blank_line' :
+                                                message_count = message_count + 1
+                                                break
+                                        else :
+                                                tmp_arrow_related_message.append(message[message_count])                                        
+                                                message_count = message_count + 1
                                 while not message[message_count] :
                                         tmp_arrow_related_message.append(final_line)
                                         message_count = message_count + 1
-                        except IndexError:
-                                continue
+                        except  IndexError :
+                                tmp_arrow_related_message = tmp_arrow_related_message
+                                
+
 
                         dict_all_context[final_arrow_line[arrow_count]] = list(tmp_arrow_related_message)  #should use a = list(b) instead of a = b ,as the second will make a equals b all the time.
                 tmp_arrow_related_message = list()
-
+        #End of bind the messages to its signal
 
         #Construct the list of arrow_line and its messages
+
         list_all_context = list()
         length = 0
         message_template = ''
         for keys in dict_all_context.keys() :
-                list_all_context.append(keys)
+                blank_lines = list()
                 for items in dict_all_context[keys]:
                         rex = r"[\-\>\<]+"
                         matched_str  = re.compile(rex).search(keys).group(0)
@@ -152,10 +171,15 @@ def index(request):
                                         length= len(matched_str)
                                         message_template = items.center(length)
                                         items = re.sub(rex, message_template, keys)
-                                        
-                        list_all_context.append(items)
+                                        list_all_context.append(items)
+                        else :
+                                blank_lines.append(items)
 
-                                
+                list_all_context.append(keys)
+
+                for line in blank_lines :
+                        list_all_context.append(line)
+                                                
         #end of list_all_context
         
 
@@ -164,7 +188,7 @@ def index(request):
                   'times': range(10),
                   'message': message,
                   'final_arrow_line': final_arrow_line,
-                  'a': list_all_context[2],
+                  'a': message_count,
                   'c': tmp_list_signal,
                   'd': 'kk',
                   'b': dict_arrow,

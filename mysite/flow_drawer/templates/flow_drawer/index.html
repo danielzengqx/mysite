@@ -94,16 +94,18 @@
 
 
 
-<pre>
+
 </br>
 <p>
-
+<h1>Signal Flow:</h1>
+<pre>
     {{ network_element }}    
     {% for item in list_all_context %}
     {{ item }}{% endfor %}
 
 
 </br>
+<!-- used for debug
     {{ network_element }}    
     {% for item in tmp_arrow_related_message %}
     {{ item }}{% endfor %}
@@ -130,7 +132,10 @@ Keys:
     {{ dict_all_context_keys }}
 </p>
 
-</pre>
+
+
+
+
  </br>
  </br>
  <p>
@@ -144,11 +149,13 @@ Keys:
  <p>Message:</br>
  {{ message }}
 
+end of debug -->
 
+</pre>
  </p>
  </br>
  </br>
- <h1> signal_flow_code:
+ <h1> signal_flow_code: </h1>
  </br>
  {% for item in signal_flow %}
  {{ item }}
