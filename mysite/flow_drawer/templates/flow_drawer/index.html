@@ -12,34 +12,51 @@
 
   <script type="text/javascript" src="{{ STATIC_URL }}/cookie.js"></script>
   <script type="text/javascript">
-    function saveContent(){
-        eraseCookie("SFcode_content");
-        var content;
-        content = document.getElementById("txt1").value;
-//        alert("init content:"+ content);
-        if (navigator.cookieEnabled){
-            content = content.replace(/\r\n|\r|\n/g,'magic',1);
-//            alert("content:\r" + content);
-            writeCookie("SFcode_content", content, 5 * 365);
-       }
-        else
-            alert("Cookie is not enabled");
-}    
+    var firstload = 1;
+    //    document.getElementById("txt1").defaultValue = "good";
 
+    function saveContent(){
+    eraseCookie("SFcode_content");
+    var content;
+    content = document.getElementById("txt1").value;
+    //        alert("init content:"+ content);
+    //alert("save content");
+    if (navigator.cookieEnabled){
+    content = content.replace(/\r\n|\r|\n/g,'magic',1);
+    //alert("content:\r" + content);
+    writeCookie("SFcode_content", content, 5 * 365);
+    }
+    else
+    alert("Cookie is not enabled");
+    firstload = 0;
+    //alert("first load = "+ firstload);
+    
+    }    
+    
     function recoverContent(){
-        var content;  
-        if (navigator.cookieEnabled){
-            //alert("Cookie is ok");
-            content = readCookie("SFcode_content");
-            content = content.replace(/magic/g,'\r\n',1);
-        }
-        else
-            alert("Cookie is not enabled");
-//        alert("show content:\n" + content);
-        document.getElementById("txt1").value = content;
+    var content;  
+    if (navigator.cookieEnabled){
+    //    alert("Cookie is ok");
+    content = readCookie("SFcode_content");
+    content = content.replace(/magic/g,'\r\n',1);
+    //alert("recover content");
+    //alert("content:\r" + content);
+    }
+    else
+    alert("Cookie is not enabled");
+    //        alert("show content:\n" + content);
+    document.getElementById("txt1").value = content;
+    //alert("content:\r" +     document.getElementById("txt1").value);
+    }
+    
+    function reloadContent(){
+    //alert("reload Content");
+    saveContent();
+    recoverContent();
 }
 
     function resetContent(){
+    if (firstload){
     document.getElementById("txt1").value = "@AAAA                     BBBBB                                  CCC                        DDDDDD \n" +
     "\n" +
     "AAAA->CCC\n" +
@@ -53,23 +70,27 @@
     "\n" +    
     "BBBBB->AAAA\n" +
     "dd \n";
+    //alert("close window");
 
     content = document.getElementById("txt1").value;
-    //    alert("init content:"+ content);
+    //alert("init content:"+ content);
     if (navigator.cookieEnabled){
     content = content.replace(/\r\n|\r|\n/g,'magic',1);
     //            alert("content:\r" + content);
     writeCookie("SFcode_content", content, 5 * 365);
     }
-  
-}
-  window.onload=resetContent;    
-  </script>
+    }
+    else {
+    recoverContent();
+    }
+    }
 
+  </script>
+  
   
 </head>
-<!--<body onload = "recoverContent()";>-->
-<body>
+<body onload="recoverContent()";>
+
 
 
 
@@ -84,20 +105,18 @@
 
 </br>
     {{ network_element }}    
-    {% for item in list_all_context_value %}
+    {% for item in tmp_arrow_related_message %}
     {{ item }}{% endfor %}
 
-    
-    
+</br>    
+Final_arrow_line:
+    {% for item in final_arrow_line %}
+    {{ item }}{% endfor %}
 
+A:
+    {{ a }}
 
 Dict_Context:
-    {{ a }}
-    {{ b }}
-    {{ c }}
-    {{ d }}
-    {{ message_count }}
-    {{ arrow_count }}
     {% for item in dict_all_context %} 
     {{ item }}
     {% endfor %}
@@ -106,8 +125,6 @@ Dict_Context:
 All_Context:
     {% for item in list_all_context %}
     {{ item }}{% endfor %}
-
-
 
 Keys:
     {{ dict_all_context_keys }}
@@ -136,12 +153,11 @@ Keys:
  {% for item in signal_flow %}
  {{ item }}
  {% endfor %}
- <form action="{% url 'flow_drawer:index' %}" method="post" onsubmit="recoverContent()";>
+ <form action="{% url 'flow_drawer:index' %}" method="post">
 
  {% csrf_token %}
- <textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px">
-</textarea>
- <input type="submit" value="SF Code -> SF" onclick="saveContent();"/>
+ <textarea class=saveHistory  id='txt1' name="signal_flow_code" style="width: 100%; height:300px"></textarea>
+ <input type="submit" value="SF Code -> SF" onclick="reloadContent();"/>
  </form>
 
  </body>

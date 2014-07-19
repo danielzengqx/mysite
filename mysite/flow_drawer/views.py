@@ -116,44 +116,47 @@ def index(request):
                                 final_arrow_line[signal_count] = re.sub("\<[\-\| ]*\-", lambda x:x.group(0).replace('|',' ').replace(' ','-'), final_arrow_line[signal_count])
 
         # Draw arrow line end
-
-        message_count = 0
-        list_all_context = list()
-        k = 0
-        arrow_count = 0
-        for arrow_count in range(len(final_arrow_line)):
-                if final_arrow_line[arrow_count]:
-                        list_all_context.append(final_arrow_line[arrow_count])
-                try :
-                        while message[message_count] :
-                                list_all_context.append(message[message_count])
-                                message_count = message_count +1
-                except IndexError:
-                        break
-                
-                message_count= message_count + 1
-                list_all_context.append(final_line)
+        
 
         message_count = 0
         dict_all_context = OrderedDict()
-        list_all_context_value = []
-        
+        tmp_arrow_related_message = []
+        arrow_count = 0
         for arrow_count in range(len(final_arrow_line)):
                 if final_arrow_line[arrow_count]:
                         try :
                                 while message[message_count] :
-                                        list_all_context_value.append(message[message_count])
+                                        tmp_arrow_related_message.append(message[message_count])
+                                        message_count = message_count + 1
+                                while not message[message_count] :
+                                        tmp_arrow_related_message.append(final_line)
                                         message_count = message_count + 1
                         except IndexError:
-                                break
+                                continue
 
-                        message_count= message_count + 1
-                        list_all_context_value.append(final_line)
-                        dict_all_context[final_arrow_line[arrow_count]] = list(list_all_context_value)  #should use a = list(b) instead of a = b ,as the second will make a equals b all the time.
-                        list_all_context_value = list()
+                        dict_all_context[final_arrow_line[arrow_count]] = list(tmp_arrow_related_message)  #should use a = list(b) instead of a = b ,as the second will make a equals b all the time.
+                tmp_arrow_related_message = list()
 
 
-                                 
+        #Construct the list of arrow_line and its messages
+        list_all_context = list()
+        length = 0
+        message_template = ''
+        for keys in dict_all_context.keys() :
+                list_all_context.append(keys)
+                for items in dict_all_context[keys]:
+                        rex = r"[\-\>\<]+"
+                        matched_str  = re.compile(rex).search(keys).group(0)
+                        if not  items == final_line :
+                                if matched_str :
+                                        length= len(matched_str)
+                                        message_template = items.center(length)
+                                        items = re.sub(rex, message_template, keys)
+                                        
+                        list_all_context.append(items)
+
+                                
+        #end of list_all_context
         
 
 	context ={'network_element': network_element,
@@ -161,12 +164,12 @@ def index(request):
                   'times': range(10),
                   'message': message,
                   'final_arrow_line': final_arrow_line,
-                  'a': dict_line,
+                  'a': list_all_context[2],
                   'c': tmp_list_signal,
                   'd': 'kk',
                   'b': dict_arrow,
-                  'list_all_context': list_all_context,
-                  'list_all_context_value': list_all_context_value,
+                  'list_all_context': list_all_context ,
+#                  'tmp_arrow_related_message': ,
                   'message_count' : message_count,
                   'arrow_count' : arrow_count,
                   'dict_all_context_values' : dict_all_context.values(),
