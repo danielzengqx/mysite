@@ -10,4 +10,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^flow_drawer/',include('flow_drawer.urls',namespace="flow_drawer")),
+    url(r'^blog/',include('blogapp.urls',namespace="blogapp")),
 )

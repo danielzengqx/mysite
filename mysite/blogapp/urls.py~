@@ -1,0 +1,8 @@
+from django.conf.urls import patterns, url, include
+from flow_drawer import views
+urlpatterns = patterns('',
+	# ex: /flow_drawer/
+	url(r'^$', views.index, name='index'),
+        url(r'^update/',  views.update, name='update'),
+        url(r'^delete/',  views.delete, name='delete'),
+	)

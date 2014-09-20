@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'flow_drawer',
+    'blogapp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,10 +57,12 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+DBNAME = 'blog'
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.dummy',
+        'NAME': os.path.join(BASE_DIR, 'db.dummy'),
     }
 }
 
