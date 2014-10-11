@@ -56,3 +56,7 @@ def delete(request):
         params = { 'id': id } 
 
     return render_to_response(template, params, context_instance=RequestContext(request))
+
+def desk(request):
+    template = 'desk.html'
+    return render_to_response(template, 'abc', context_instance=RequestContext(request))
