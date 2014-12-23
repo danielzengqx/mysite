@@ -5,6 +5,6 @@ urlpatterns = patterns('',
         url(r'^update/',  views.update, name='update'),
         url(r'^delete/',  views.delete, name='delete'),
         url(r'^update/',  views.update, name='update'),
-        url(r'^desk/',  views.desk, name='desk'),
+        url(r'^mysubmit/',  views.mysubmit, name='mysubmit'),
         
 	)

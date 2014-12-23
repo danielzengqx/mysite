@@ -6,20 +6,24 @@ from django.template import RequestContext
 from models import Post
 import datetime
 
+
 def index(request):
+    kk = ''
     if request.method == 'POST':
        # save new post
        title = request.POST['title']
+       test_type = request.POST['test_type']
        content = request.POST['content']
-
        post = Post(title=title)
        post.last_update = datetime.datetime.now() 
+       post.test_type = test_type
        post.content = content
+       
        post.save()
-
+       kk = "123"
     # Get all posts from DB
     posts = Post.objects 
-    return render_to_response('index.html', {'Posts': posts},
+    return render_to_response('index.html', {'abc': kk},
                               context_instance=RequestContext(request))
 
 
@@ -30,6 +34,7 @@ def update(request):
     if request.method == 'POST':
         # update field values and save to mongo
         post.title = request.POST['title']
+
         post.last_update = datetime.datetime.now() 
         post.content = request.POST['content']
         post.save()
@@ -49,7 +54,7 @@ def delete(request):
     if request.method == 'POST':
         post = Post.objects(id=id)[0]
         post.delete() 
-        template = 'index.html'
+        template = 'mysubmit.html'
         params = {'Posts': Post.objects} 
     elif request.method == 'GET':
         template = 'delete.html'
@@ -57,6 +62,21 @@ def delete(request):
 
     return render_to_response(template, params, context_instance=RequestContext(request))
 
-def desk(request):
-    template = 'desk.html'
-    return render_to_response(template, 'abc', context_instance=RequestContext(request))
+def mysubmit(request):
+    if request.method == 'POST':
+       # save new post
+       title = request.POST['title']
+       test_type = request.POST['test_type']
+       content = request.POST['content']
+       post = Post(title=title)
+       post.last_update = datetime.datetime.now() 
+       post.test_type = test_type
+       post.content = content
+       
+       post.save()
+
+    # Get all posts from DB
+    posts = Post.objects 
+    return render_to_response('mysubmit.html', {'Posts': posts},
+                              context_instance=RequestContext(request))
+

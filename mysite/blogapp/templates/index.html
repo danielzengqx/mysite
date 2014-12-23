@@ -2,70 +2,69 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="{{STATIC_URL}}blog/blog.css" rel="stylesheet" styple="text/css">
+    <link href="{{STATIC_URL}}blog/blog.css" rel="stylesheet" style="text/css">
+    <script type="text/javascript" src="{{ STATIC_URL }}blog/blog.js"></script>
     <title>My blog</title>
   </head> 
   <body>
-    <div id="page-wrap">
-    <div class="top">
-      <header>Blongo</header>
-    </div>
-      <a href="{% url 'blogapp:index' %}"  id="home">
-	  <span class="shape-tab">Blog</span>
-      </a>
-      <a href="{% url 'blogapp:index' %}" id="picture">
-	<span class="shape-tab">Picture</span>
-      </a>
-
-      <a href="{% url 'blogapp:index' %}" id="video">
-	  <span class="shape-tab">Video</span>
-      </a>
-      
-      <a href="{% url 'blogapp:index' %}"id="car">
-	<span class="shape-tab">Car</span>
-      </a>
-      
-      <a href="{% url 'blogapp:desk' %}"id="desk">
-	<span class="shape-tab">Desk</span>
-      </a>
-      
-      <div class="spacer" style="clear: both;"></div>    <!---  为了不使下面的form环绕上面的shape-tab -->
-      <!---  form here ----->
-      <form method="post" action="{% url 'blogapp:index' %}">
-      {% csrf_token %}
-      <ul class="post-button">
-        <li>
-          <input type="text" name="title" placeholder="Post Title" required>
-        </li>
-        <li>
-          <textarea name="content" placeholder="Enter Content" rows=5 cols=50 required>
-          </textarea>
-        </li>
-        <li>
-          <input type="submit" value="Add Post">
-        </li>
+    <div id="wrapper">
+    <header>Blog</header>
+    <nav>
+      <ul>
+	<li>
+	  <a href="{% url 'blogapp:index' %}"  id="home_page">
+	   Home Page {{ abc }}
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}" id="picture">
+	    Picture
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}" id="video">
+	    Video
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}"id="car">
+	    Car
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:mysubmit' %}" id="my_submit" onclick="loadMysubmit();">
+	    My Submit
+	  </a>
+	</li>
       </ul>
-    </form>
-    <div class="content-wrap">            <!-- Cycle through entries -->
-    {% for post in Posts %}
-      <h2> {{ post.title }} </h2>
-      <p>{{ post.last_update }}</p>
-      <p>{{ post.content }}</p>
-      <form method="get" action="{% url 'blogapp:update' %}">
-        <input type="hidden" name="id" value="{{ post.id }}">
-        <input type="hidden" name="title" value="{{ post.title }}">
-        <input type="hidden" name="last_update" value="{{ post.last_update }}">
-        <input type="hidden" name="content" value="{{ post.content }}">
-        <input type="submit" name="" value="update">
-      </form>
-      <form method="get" action="{% url 'blogapp:delete' %}">
-        <input type="hidden" name="id" value="{{post.id}}">
-        <input type="submit" value="delete">
-      </form>
-    {% endfor %}
-    </div>
+    </nav>
+      <section>
+	<form method="post" action="{% url 'blogapp:mysubmit' %}">
+	  {% csrf_token %}
+	  
 
+	  <p><label id="title-label">Title:</label><input id="title-box"type="text" name="title" placeholder="TR Title" required></p>
+	  
+	  
+	  <p>
+	    <label id="test-type-label">Test Type: </label>
+	    <select id="test-type-box" name="test_type" >
+	      <option value="function-test" selected>Function Test</option>
+	      <option value="system-test" >System Test</option>
+	      <option value="unite-test" >Unite Test</option>
+	    </select>
+	  </p>
+	  
+	  
+	  <p>
+	    <textarea name="content" placeholder="Enter Content" rows=5 cols=50 required>
+            </textarea></br>
+          </p>
+	<input type="submit" value="Add Post">
+	
+	</form>
 
+      </section>
     </div>
   </body>
 </html>
