@@ -1,0 +1,57 @@
+* {
+    margin:0px;
+    padding:0px;
+}
+
+#wrapper {
+    width:95%;
+    #width:960px;
+    #height:800px;
+    margin:0 auto;
+    border:1px solid;
+}
+
+header {
+    font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
+    font-size:50px;
+    color:red;
+    background:black;
+}
+
+nav {
+    #display:table-cell;
+    #box-sizing:border-box;
+    width:200px;
+    float:left;
+    background-color:red;
+    padding:10px;
+}
+
+nav li {
+    list-style:none;
+
+} 
+
+section {
+    display:table-cell;
+    #box-sizing:border-box;
+    #float:left;
+    width:3000px;
+    background:green;
+    padding:10px 20px;
+}
+
+textarea {
+    width:100%;
+
+}
+
+aside {
+    display:table-cell;
+    #box-sizing:border-box;
+    #float:left;
+    width:160px;
+    background:blue;
+    padding:10px;
+    
+}
