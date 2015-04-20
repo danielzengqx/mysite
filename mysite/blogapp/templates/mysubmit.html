@@ -1,0 +1,67 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="{{STATIC_URL}}blog/blog.css" rel="stylesheet" style="text/css">
+    <script type="text/javascript" src="{{ STATIC_URL }}blog/blog.js"></script>
+    <title>My blog</title>
+  </head> 
+  <body>
+    <div id="wrapper">
+    <header>Blog</header>
+    <nav>
+      <ul>
+	<li>
+	  <a href="{% url 'blogapp:index' %}"  id="home_page">
+	   Home Page
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}" id="picture">
+	    Picture
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}" id="video">
+	    Video
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}"id="car">
+	    Car
+	  </a>
+	</li>
+	<li>
+	  <a href="{% url 'blogapp:index' %}" id="my_submit" onclick="loadMysubmit();">
+	    My Submit
+	  </a>
+	</li>
+      </ul>
+    </nav>
+      
+      <section>
+	<!-- Cycle through entries -->
+	{% for post in Posts %}
+	<h2> {{ post.title }} </h2>
+	<p>{{ post.last_update }}</p>
+	<p>{{ post.test_type }} </p>
+	<p>{{ post.content }}</p>
+	<form method="get" action="{% url 'blogapp:update' %}">
+          <input type="hidden" name="id" value="{{ post.id }}">
+        <input type="hidden" name="title" value="{{ post.title }}">
+	<input type="hidden" name="test_type" value="{{ post.test_type }}">
+        <input type="hidden" name="last_update" value="{{ post.last_update }}">
+        <input type="hidden" name="content" value="{{ post.content }}">
+        <input type="submit" name="" value="update">
+	</form>
+	<form method="get" action="{% url 'blogapp:delete' %}">
+          <input type="hidden" name="id" value="{{post.id}}">
+          <input type="submit" value="delete">
+	</form>
+      {% endfor %}
+	
+      </section>
+    <p>{{ abc }}</p>
+    </div>
+  </body>
+</html>
