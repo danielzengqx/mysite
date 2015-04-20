@@ -1,10 +1,13 @@
 from django.shortcuts import render
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 # Create your views here.
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from models import Post
 import datetime
+
 
 
 def index(request):
@@ -78,5 +81,31 @@ def mysubmit(request):
     # Get all posts from DB
     posts = Post.objects 
     return render_to_response('mysubmit.html', {'Posts': posts},
+                              context_instance=RequestContext(request))
+
+
+import uuid
+
+
+  #read cache user id
+def read_from_cache():
+    key = datetime
+    reg_id = cache.get(key)
+    return reg_id
+
+#write cache user id
+def write_to_cache(data):
+    key = datetime
+    cache.set(key, data, 60*1)
+
+def get_id():
+  return  str(uuid.uuid4())[:11].replace('-', '').lower() 
+
+@cache_page(30)
+def register(request):
+    reg_id = get_id
+    write_to_cache(reg_id)
+    #return  render_to_response('register.html', {'reg_id': 1234})
+    return render_to_response('register.html', {'reg_id': reg_id},
                               context_instance=RequestContext(request))
 
